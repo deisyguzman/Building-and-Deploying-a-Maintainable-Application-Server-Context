@@ -2,6 +2,10 @@
 
 Small, sequential Java application server built for the AREP lambda-based web framework lab. The project serves HTML, CSS, JavaScript and an image from the classpath, while application developers register GET services with Java lambdas.
 
+## Autor
+
+Deisy Lorena Guzmán Cabrales
+
 ## Architecture
 
 ```mermaid
@@ -79,32 +83,29 @@ curl.exe http://localhost:8080/shutdown
 
 The handler returns `Server will stop after this response.`, closes the current client connection, and then the sequential loop exits. In production, set `APP_ENV=production`; the route is not registered and returns 404.
 
-## Cloud deployment with AWS Academy Learner Lab
+## Cloud deployment: AWS Academy Learner Lab
 
-The included `Dockerfile` can be deployed on an EC2 instance. AWS Academy provides temporary credentials, so never commit them, place them in the README, or expose them in screenshots.
+The application is deployed in an Amazon EC2 instance using the included `Dockerfile`.
 
-### 1. Create the EC2 instance
+**Public deployment URL:** http://13.218.105.19:8080
 
-In the AWS Academy Learner Lab console, start the lab and open **EC2**:
+The EC2 instance runs Amazon Linux with Docker. Its Security Group allows SSH on port `22` and public TCP traffic on port `8080`. The container is configured with:
 
-1. Launch an instance using Amazon Linux 2023 and a small instance type allowed by the lab, such as `t3.micro`.
-2. Create or select a key pair. Keep the private key outside the repository.
-3. In the security group, allow SSH `22` only from your IP and custom TCP `8080` from `0.0.0.0/0` for the demonstration.
-4. Launch the instance and copy its public IPv4 address.
+```text
+PORT=8080
+APP_ENV=production
+GREETING_PREFIX=Hello from AWS Academy
+```
 
-For the lab, the public URL will be `http://PUBLIC_IPV4:8080`.
-
-### 2. Install Docker and run the application
-
-Connect using EC2 Instance Connect in the AWS console, or SSH from a machine that has the key pair. Then run:
+The deployment can be reproduced with:
 
 ```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+cd YOUR_REPOSITORY
 sudo dnf install -y docker git
 sudo systemctl enable --now docker
 sudo usermod -aG docker ec2-user
 newgrp docker
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
 docker build -t maintainable-server .
 docker run -d --name maintainable-server --restart unless-stopped \
     -p 8080:8080 \
@@ -114,41 +115,42 @@ docker run -d --name maintainable-server --restart unless-stopped \
     maintainable-server
 ```
 
-The application binds to all interfaces through `ServerSocket`, and the EC2 security group exposes it on port `8080`. Check the container with `docker ps` and `docker logs maintainable-server`.
+The public IPv4 address may change if the EC2 instance is stopped and restarted. If that happens, update the URL above and the evidence links.
 
-### 3. Verify the deployment
+## Tests
 
-Replace `PUBLIC_IPV4` with the instance address:
+The automated tests cover decoded multiple query parameters, missing values, GET route lookup, unknown routes, static HTML loading, content types, root-page rendering, and path traversal rejection. Run them with:
 
-```bash
-curl -i http://PUBLIC_IPV4:8080/
-curl -i http://PUBLIC_IPV4:8080/styles.css
-curl -i http://PUBLIC_IPV4:8080/images/server.svg
-curl -i "http://PUBLIC_IPV4:8080/hello?name=Cloud"
-curl -i http://PUBLIC_IPV4:8080/pi
-curl -i http://PUBLIC_IPV4:8080/unknown
-curl -i http://PUBLIC_IPV4:8080/shutdown
+```powershell
+mvn clean test
 ```
-
-The first five valid paths must return 200, `/unknown` must return 404, and `/shutdown` must return 404 because the container uses `APP_ENV=production`. Capture the deployed page, one static resource, both REST responses, the 404 response, and the environment configuration (`APP_ENV=production` and the greeting prefix, without secrets) for the report.
-
-**Public deployment URL:** `REPLACE_WITH_EC2_PUBLIC_URL`
-
-Use `http://PUBLIC_IPV4:8080` as the value after launching the instance. The public IPv4 address can change when the instance is stopped and started; update this README and the evidence if that happens. Stop the EC2 instance after collecting evidence so the temporary lab quota is not consumed unnecessarily.
-
-## Evidence and tests
-
-The automated tests cover decoded multiple query parameters, missing values, GET route lookup, unknown routes, static HTML loading, content types, and path traversal rejection. `mvn clean test` is the repeatable local evidence command.
-
-Manual local evidence to capture for the report:
-
-- Page: `/` or `/index.html`.
-- Static resources: `/styles.css`, `/app.js`, and `/images/server.svg`.
-- Lambda endpoints: `/hello?name=Pedro` and `/pi`.
-- Error response: `/unknown` with HTTP 404.
-- Graceful development shutdown: `/shutdown` followed by a stopped process.
-- Production protection: `/shutdown` with `APP_ENV=production`, returning HTTP 404.
 
 ## Maintainability
 
 A new application endpoint is added with one `get(path, lambda)` registration in `Application`; the socket-processing loop does not change. Routing, request parsing, static files, response formatting, and lifecycle control each have one focused responsibility. The same Maven artifact runs locally and in the Docker image, with deployment differences supplied through environment variables.
+
+## Evidence
+
+![alt text](img/image.png)
+
+![alt text](img/image-1.png)
+
+![alt text](img/image-2.png)
+
+![alt text](img/image-3.png)
+
+![alt text](img/image-4.png)
+
+![alt text](img/image-5.png)
+
+![alt text](img/image-6.png)
+
+![alt text](img/image-7.png)
+
+![alt text](img/image-8.png)
+
+![alt text](img/image-9.png)
+
+![alt text](img/image-10.png)
+
+![alt text](img/image-11.png)
