@@ -28,12 +28,13 @@ public final class StaticFileService {
         if (cleanPath.contains("..")) {
             return Optional.empty();
         }
-        String resourceName = root + ("/".equals(cleanPath) ? "/index.html" : cleanPath);
+        String resourcePath = "/".equals(cleanPath) ? "/index.html" : cleanPath;
+        String resourceName = root + resourcePath;
         try (InputStream input = StaticFileService.class.getResourceAsStream(resourceName)) {
             if (input == null) {
                 return Optional.empty();
             }
-            String contentType = contentType(cleanPath);
+            String contentType = contentType(resourcePath);
             return Optional.of(new StaticResource(input.readAllBytes(), contentType));
         } catch (IOException exception) {
             return Optional.empty();

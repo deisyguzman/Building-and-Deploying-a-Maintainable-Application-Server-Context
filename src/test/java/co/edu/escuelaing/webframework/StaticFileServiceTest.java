@@ -10,6 +10,10 @@ class StaticFileServiceTest {
     void loadsHtmlAndRejectsUnknownOrUnsafeResources() {
         StaticFileService files = new StaticFileService();
 
+        var root = files.find("/");
+        assertTrue(root.isPresent());
+        assertEquals("text/html; charset=utf-8", root.get().contentType());
+
         var index = files.find("/index.html");
         assertTrue(index.isPresent());
         assertEquals("text/html; charset=utf-8", index.get().contentType());
