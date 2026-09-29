@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" role="img" aria-labelledby="title">
+  <title>Sequential server</title>
+  <rect width="240" height="180" rx="12" fill="#17252a"/>
+  <rect x="36" y="28" width="168" height="124" rx="8" fill="#f5f0e8"/>
+  <circle cx="61" cy="52" r="7" fill="#d95d39"/><circle cx="84" cy="52" r="7" fill="#e6b65c"/>
+  <path d="M58 86h124M58 111h90" stroke="#607278" stroke-width="8" stroke-linecap="round"/>
+  <path d="M170 111h12" stroke="#d95d39" stroke-width="8" stroke-linecap="round"/>
+</svg>

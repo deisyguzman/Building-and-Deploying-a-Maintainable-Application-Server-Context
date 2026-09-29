@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sequential Service Desk</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main class="shell">
+    <p class="eyebrow">MAINTAINABLE APPLICATION SERVER</p>
+    <h1>A small server with a clear route to every response.</h1>
+    <p class="intro">Static resources and lambda services share one sequential, easy-to-follow HTTP pipeline.</p>
+    <section class="panel">
+        <label for="name">Try the greeting service</label>
+        <div class="controls">
+            <input id="name" type="text" placeholder="Your name" autocomplete="off">
+            <button type="button" onclick="greet()">Greet</button>
+        </div>
+        <p id="result" class="result" aria-live="polite">Waiting for a request...</p>
+    </section>
+    <img src="/images/server.svg" alt="Abstract server illustration" class="server-image">
+    <p class="links"><a href="/pi">GET /pi</a><span>·</span><a href="/health">GET /health</a></p>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
